@@ -9,6 +9,6 @@ $(function(){
         selectable: true,
         selectHelper: true,
         editable: true,
-        events: 'https://www.google.com/calendar/feeds/mikestcasey%40gmail.com/public/basic'
+        events: 'events'
     });
 });

@@ -22,9 +22,18 @@ router.get('/userlist', function(req, res) {
     });
 });
 
-/* GET Hello World page. */
+/* GET Calendar page. */
 router.get('/calendar', function(req, res) {
+	
     res.render('calendar', { title: 'Calendar' })
+});
+
+router.get('/events', function(req, res)  {
+	var db = req.db;
+	var collection = db.get('events');
+	collection.find({},{},function(e,docs){
+		res.send(docs);
+    });
 });
 
 module.exports = router;
