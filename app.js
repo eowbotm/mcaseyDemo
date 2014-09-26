@@ -13,6 +13,8 @@ var db = monk('mongodb://nodejitsu:60a1da5534ca42d324e65d5f814ce729@troup.mongoh
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var create = require('./routes/create');
+var features = require('./routes/features');
 
 var app = express();
 
@@ -35,6 +37,8 @@ app.use(function(req,res,next){
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/create', create);
+app.use('/api', features);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
