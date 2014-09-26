@@ -36,4 +36,26 @@ router.get('/events', function(req, res)  {
     });
 });
 
+router.post('/addevent', function(req, res)	{
+	var db = req.db;
+	
+	var eventName = req.body.title;
+	var eventStart = req.body.start;
+	var eventEnd = req.body.end;
+	var eventColor = req.body.color;
+	
+	var collection = db.get('events');
+	collection.insert({
+		"title" : eventName,
+		"start" : eventStart,
+		"end" : eventEnd,
+		"color" : eventColor
+		}, function(err, doc)	{
+			if(err){
+				res.send("Problem adding event to database");
+			}
+		
+	});
+});
+
 module.exports = router;
