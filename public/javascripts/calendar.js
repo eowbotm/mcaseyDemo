@@ -22,13 +22,13 @@ $(function(){
 				start:start._d,
 				end: end._d,
 				color: "blue"};
-				$.post("/addevent",data);
+				$.post("/calendar/addevent",data);
 			}
 			calendar.fullCalendar('unselect');
 		},
         selectable: true,
         selectHelper: true,
         editable: true,
-        events: 'events'
+        events: 'calendar/events'
     });
 });
