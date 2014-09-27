@@ -2,11 +2,6 @@ var express = require('express');
 var router = express.Router();
 var geojson = require('geojson');
 
-/* GET create page. */
-router.get('/', function(req, res) {
-    res.render('create');
-});
-
 router.all('/features', (function(req, res, next) {
         // This is fantastic; monk seems to cache the connection as every time this runs after the first
         // is an order of magnitude less than the first time (~200 ms to ~20 ms).
