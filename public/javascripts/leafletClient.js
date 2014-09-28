@@ -1,4 +1,5 @@
-//var L = require('leaflet');
+
+var map;
 
 L.Icon.Default.imagePath = 'http://leafletjs.com/dist/images';
 
@@ -7,16 +8,15 @@ window.onload = function() {
     div.id = 'map';
 
     var DC_COORDS = [38.914268, -77.021098];
-    var map = L.map(div).setView(DC_COORDS, 13);
+    map = L.map(div).setView(DC_COORDS, 13);
 
     L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     var popup = L.popup();
     map.on('click', onMapClick);
 
-	var layer;
 	$.get('api/features', function(data){
-		layer = L.geoJson(data, {
+		L.geoJson(data, {
 			onEachFeature: onEachFeature
 		}).addTo(map);
 	});
@@ -37,11 +37,11 @@ window.onload = function() {
 
 function createForm(e) {
     var html =
-        '<div><form method=\"post\" action=\"/api/features\" enctype=\"x-www-form-urlencoded\"><div><span>Name:</span><input type=\"text\" name=\"name\" autofocus=\"autofocus\"></div><div><span>Latitude:</span><input type=\"text\" name=\"lat\" value=\"' +
+        '<div><form id=featureForm enctype=\"x-www-form-urlencoded\"><div><span>Name:</span><input type=\"text\" name=\"name\" autofocus=\"autofocus\"></div><div><span>Latitude:</span><input type=\"text\" name=\"lat\" value=\"' +
         e.latlng.lat +
         '\"></div><div><span>Longitude:</span><input type=\"text\" name=\"lon\" value=\"' +
         e.latlng.lng +
-        '\"></div><div><input type=\"submit\" value=\"Submit\"></div></form></div>';
+        '\"></div><div><input type=\"button\" onclick="formSubmitted()" value=\"Submit\" /></div></form></div>';
     return html;
 }
 
@@ -49,4 +49,21 @@ function onEachFeature(feature, layer) {
     if (feature.properties && feature.properties.name) {
         layer.bindPopup(feature.properties.name);
     }
+}
+
+function formSubmitted(){
+	var src = document.forms.featureForm;
+	var data = {
+		name: src[0].value,
+		lat: src[1].value,
+		lon: src[2].value
+		};
+	$.post("/api/features", data, function(data){
+		//handle errors
+		});
+	addGraphicalFeature(data.name, data.lat, data.lon);
+}
+
+function addGraphicalFeature(name, lat, lon) {
+	L.marker([lat,lon]).bindPopup(name).addTo(map).openPopup();
 }
