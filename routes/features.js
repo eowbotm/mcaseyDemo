@@ -44,7 +44,7 @@ router.route('/features')
             req.features.insert(toInsert, function (err, doc) {
                 if (err) next(new Error(err));
                 console.log('feature committed successfully.');
-				res.status(200).end();
+				res.status(200).send(doc);
             });
         }
     })

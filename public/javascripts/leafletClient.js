@@ -68,17 +68,35 @@ function formSubmitted(){
 		lon: src[2].value
 		};
 	$.post("/api/features", data, function(data){
+			if(true) {//if successful
+				
+				addGraphicalFeature(data.name, data.lat, data.lon, data._id);
+			}
 		//handle errors
 		});
-	addGraphicalFeature(data.name, data.lat, data.lon);
+	
 }
 
-function addGraphicalFeature(name, lat, lon) {
-	L.marker([lat,lon]).bindPopup(name).addTo(map).openPopup();
+function addGraphicalFeature(name, lat, lon, id) {
+	var layer = L.marker([lat,lon]);
+	
+	var feature = new Object();
+	feature.properties = {"_id": id};
+	feature.geometry = new Object();
+	feature.geometry.coordinates = [lat,lon];
+	
+	layer.feature = feature;
+	
+	createPopup(name, layer);
+	layer.addTo(map).openPopup();
+	layer.on({
+			click: onClick
+		});
+		
+	selectedFeature = layer;
 }
 
 function deleteFeature() {
-	
 	$.ajax({
 		url:	"/api/features",
 		type: "DELETE",
