@@ -21,7 +21,6 @@ router.route('/features')
         });
     })
 .post(function(req, res, next) {
-
         // This is more to be helpful to users of a REST client like Postman who forget to set Content-Type.
         //if (req.headers["content-type"].toLowerCase() != "application/x-www-form-urlencoded") {
         //    console.log(req.headers["content-type"]);
@@ -32,7 +31,7 @@ router.route('/features')
         var name = req.body.name;
         var lat = Number(req.body.lat);
         var lon = Number(req.body.lon);
-
+		
         if (!name.isEmpty || name.isEmpty()) {
             res.send("Invalid name: must be a non-blank string.");
         }
@@ -48,7 +47,22 @@ router.route('/features')
 				res.status(200).end();
             });
         }
-    });
+    })
+.delete(function(req, res, next) {
+		var id = req.body.id;
+		if (!id.isEmpty || id.isEmpty()) {
+            res.send("Invalid id: must be a non-blank string.");
+		}
+		else { // Valid data, so we can attempt an insert into mongo.
+            console.log("deleting feature", id);
+            var toDelete = { "_id": id };
+            req.features.remove(toDelete, function (err, doc) {
+                if (err) next(new Error(err));
+                console.log('feature deleted successfully.');
+				res.status(200).end();
+            });
+        }
+	});
 
 String.prototype.isEmpty = function() {
     return (this.length === 0 || !this.trim());

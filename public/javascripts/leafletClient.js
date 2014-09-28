@@ -1,5 +1,6 @@
 
 var map;
+var selectedFeature;
 
 L.Icon.Default.imagePath = 'http://leafletjs.com/dist/images';
 
@@ -20,12 +21,6 @@ window.onload = function() {
 			onEachFeature: onEachFeature
 		}).addTo(map);
 	});
-	
-    // Initialize the layer with no features; the request below will be used to populate it.
-   
-
-    // The request package added 3/4 MB to my client.js, so it's back to using this ugly thing.
-    //layer.addData(JSON.parse('api/features'));
 
     function onMapClick(e) {
         popup
@@ -34,6 +29,10 @@ window.onload = function() {
             .openOn(map);
     }
 };
+
+function onClick(e) {
+		selectedFeature = e.target;
+	}
 
 function createForm(e) {
     var html =
@@ -45,10 +44,20 @@ function createForm(e) {
     return html;
 }
 
+function createPopup(name, layer) {
+	var html = '<b>' + name + '</b>';
+	html += '<div><input type=\"button\" value="X" onclick=\"deleteFeature()\"/></div>';
+	layer.bindPopup(html);
+}
+
 function onEachFeature(feature, layer) {
     if (feature.properties && feature.properties.name) {
-        layer.bindPopup(feature.properties.name);
+        createPopup(feature.properties.name, layer);
+		layer.on({
+			click: onClick
+		});
     }
+	
 }
 
 function formSubmitted(){
@@ -66,4 +75,16 @@ function formSubmitted(){
 
 function addGraphicalFeature(name, lat, lon) {
 	L.marker([lat,lon]).bindPopup(name).addTo(map).openPopup();
+}
+
+function deleteFeature() {
+	
+	$.ajax({
+		url:	"/api/features",
+		type: "DELETE",
+		data: {id: selectedFeature.feature.properties._id},
+		success: function(result) {
+			map.removeLayer(selectedFeature);
+		}
+	});
 }
