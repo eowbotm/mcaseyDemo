@@ -22,7 +22,7 @@ $(function(){
 				start:start._d,
 				end: end._d,
 				color: "blue"};
-				$.post("/calendar/addevent",data);
+				$.post("/calendar/events",data);
 			}
 			calendar.fullCalendar('unselect');
 		},

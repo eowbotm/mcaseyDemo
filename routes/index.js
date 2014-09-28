@@ -30,8 +30,9 @@ router.get('/calendar', function(req, res) {
 
 /* GET Calendar page. */
 router.get('/maps', function(req, res) {
-	
-    res.render('map', { title: 'Map' })
+    res.render('map', { 
+		title: 'Map'
+	})
 });
 
 module.exports = router;

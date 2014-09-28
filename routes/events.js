@@ -9,7 +9,7 @@ router.get('/events', function(req, res)  {
     });
 });
 
-router.post('/addevent', function(req, res)	{
+router.post('/events', function(req, res)	{
 	var db = req.db;
 	
 	var eventName = req.body.title;
